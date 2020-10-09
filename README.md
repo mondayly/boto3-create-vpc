@@ -1,2 +1,3 @@
 # boto3-create-vpc
-create natgateway,routetable,subnets and IGW
+Create a highly available architecture  
+create natgateway routetable  subnets IGW
