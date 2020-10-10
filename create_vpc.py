@@ -11,6 +11,10 @@ def lambda_handler(event, context):
     LLTD1 = LLTD["LLTD"]
     #print (type(LLTD1))
     #return event
+    LLTD2 = LLTD["LLTD2"]
+    LLTD3 = LLTD["LLTD3"]
+    LLTD4 = LLTD["LLTD4"]
+    LLTD5 = LLTD["LLTD5"]
     ec2 = boto3.resource('ec2')
     vpc = ec2.create_vpc(CidrBlock='20.0.0.0/16')
     vpc.create_tags(Tags=[{"Key": "Name", "Value": LLTD1}])
@@ -23,11 +27,11 @@ def lambda_handler(event, context):
     routetable1 = vpc.create_route_table()
     route1 = routetable1.create_route(DestinationCidrBlock='0.0.0.0/0', GatewayId=internetgateway.id)
     routetag1 = routetable1.create_tags(Tags=[{"Key":"Name","Value":"public_route_table"}])
-    subnet1 = ec2.create_subnet(AvailabilityZone="us-east-2a",CidrBlock='20.0.1.0/24', VpcId=vpc.id)
+    subnet1 = ec2.create_subnet(AvailabilityZone="us-east-2a",CidrBlock=LLTD2, VpcId=vpc.id)
     ec2Client.associate_route_table(RouteTableId=routetable1.id,SubnetId=subnet1.id)
-    subnet2 = ec2.create_subnet(AvailabilityZone="us-east-2a",CidrBlock='20.0.2.0/24', VpcId=vpc.id)
-    subnet3 = ec2.create_subnet(AvailabilityZone="us-east-2b",CidrBlock='20.0.3.0/24', VpcId=vpc.id)
-    subnet4 = ec2.create_subnet(AvailabilityZone="us-east-2b",CidrBlock='20.0.4.0/24', VpcId=vpc.id)
+    subnet2 = ec2.create_subnet(AvailabilityZone="us-east-2a",CidrBlock=LLTD3, VpcId=vpc.id)
+    subnet3 = ec2.create_subnet(AvailabilityZone="us-east-2b",CidrBlock=LLTD4, VpcId=vpc.id)
+    subnet4 = ec2.create_subnet(AvailabilityZone="us-east-2b",CidrBlock=LLTD5, VpcId=vpc.id)
     ec2Client.associate_route_table(RouteTableId=routetable1.id,SubnetId=subnet4.id)
     ec2Client.modify_subnet_attribute(MapPublicIpOnLaunch={ 'Value': True},SubnetId=subnet1.id)
     ec2Client.modify_subnet_attribute(MapPublicIpOnLaunch={ 'Value': True},SubnetId=subnet4.id)
