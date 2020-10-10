@@ -5,8 +5,9 @@ import json
 import time
 
 #Need to change the environment variable of vpcid,it is called 'tt'
-vpcid = os.environ['tt']
-def lambda_handler(event, context):
+def lambda_handler(event, context)
+    LLTD =json.loads(event["body"])
+    vpcid = LLTD["vpcid"]
     """Remove VPC from AWS
     Set your region/access-key/secret-key from env variables or boto config.
     :param vpcid: id of vpc to delete
