@@ -3,11 +3,18 @@ import boto3
 import time
 
 def lambda_handler(event, context):
+    #print (event)
+    #print(type(event["body"]))
+    LLTD =json.loads(event["body"])
+    #将str转换成dict
+    #Convert str to dict
+    LLTD1 = LLTD["LLTD"]
+    #print (type(LLTD1))
+    #return event
     ec2 = boto3.resource('ec2')
     vpc = ec2.create_vpc(CidrBlock='20.0.0.0/16')
-    vpc.create_tags(Tags=[{"Key": "Name", "Value": "xvpc"}])
+    vpc.create_tags(Tags=[{"Key": "Name", "Value": LLTD1}])
     vpc.wait_until_available()
-
     ec2Client = boto3.client('ec2')
     ec2Client.modify_vpc_attribute( VpcId = vpc.id , EnableDnsSupport = { 'Value': True } )
     ec2Client.modify_vpc_attribute( VpcId = vpc.id , EnableDnsHostnames = { 'Value': True } )
@@ -32,7 +39,7 @@ def lambda_handler(event, context):
     elasticip2 = ec2Client.allocate_address()
     natgateway1 = ec2Client.create_nat_gateway(AllocationId=elasticip1['AllocationId'],SubnetId=subnet1.id)
     natgateway2 = ec2Client.create_nat_gateway(AllocationId=elasticip2['AllocationId'],SubnetId=subnet4.id)
-    time.sleep(60)
+    time.sleep(20)
     routetable2 = vpc.create_route_table()
     route2 = routetable2.create_route(DestinationCidrBlock='0.0.0.0/0', NatGatewayId=natgateway1['NatGateway']['NatGatewayId'])
     routetag2 = routetable2.create_tags(Tags=[{"Key":"Name","Value":"private_route_table1"}])
@@ -41,4 +48,5 @@ def lambda_handler(event, context):
     route3 = routetable3.create_route(DestinationCidrBlock='0.0.0.0/0', NatGatewayId=natgateway2['NatGateway']['NatGatewayId'])
     routetag3 = routetable3.create_tags(Tags=[{"Key":"Name","Value":"private_route_table2"}])  
     ec2Client.associate_route_table(RouteTableId=routetable3.id,SubnetId=subnet3.id)
+    
     return "success"
