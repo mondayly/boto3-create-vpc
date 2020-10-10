@@ -6,7 +6,7 @@ def lambda_handler(event, context):
     #print (event)
     #print(type(event["body"]))
     LLTD =json.loads(event["body"])
-    #将str转换成dict
+    #将str转换成dict,如果你不使用API Gateway的POST就将第8和第11行注释了
     #Convert str to dict
     LLTD1 = LLTD["LLTD"]
     #print (type(LLTD1))
