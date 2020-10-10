@@ -3,6 +3,7 @@ import boto3
 import os
 import json
 import time
+
 #Need to change the environment variable of vpcid,it is called 'tt'
 vpcid = os.environ['tt']
 def lambda_handler(event, context):
