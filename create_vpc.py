@@ -15,8 +15,11 @@ def lambda_handler(event, context):
     LLTD3 = LLTD["LLTD3"]
     LLTD4 = LLTD["LLTD4"]
     LLTD5 = LLTD["LLTD5"]
+    add = event["multiValueQueryStringParameters"]
+    address = add["address"]
+    #使用Postman中的Params，添加键值对，Key和Value都可以自定义，再通过event引用
     ec2 = boto3.resource('ec2')
-    vpc = ec2.create_vpc(CidrBlock='20.0.0.0/16')
+    vpc = ec2.create_vpc(CidrBlock=address[0])
     vpc.create_tags(Tags=[{"Key": "Name", "Value": LLTD1}])
     vpc.wait_until_available()
     ec2Client = boto3.client('ec2')
